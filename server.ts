@@ -45,7 +45,6 @@ async function fetchWhoisData(domain: string) {
       mensaje: "Este dominio no está registrado",
       disponible: true,
       fechaConsulta: new Date().toISOString(),
-      enlaceRegistro: `https://clientes.nic.cl/registrar/agregarDominio.do?d=${encodeURIComponent(domain)}`
     };
   }
 
@@ -74,7 +73,6 @@ async function fetchWhoisData(domain: string) {
       domainData.restauracion = {
         fechaLimite: restorationMatch[0],
         mensaje: restorationText.replace(/\s+/g, ' ').trim(),
-        enlaceRestauracion: `https://clientes.nic.cl/registrar/renovar.do?d=${domain}`
       };
     }
   }
