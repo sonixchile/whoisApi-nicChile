@@ -1,5 +1,5 @@
-import { Application, Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.49/deno-dom-wasm.ts";
+import { Application, Router } from "oak";
+import { DOMParser } from "dom";
 
 const router = new Router();
 
