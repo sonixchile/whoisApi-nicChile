@@ -5,7 +5,6 @@ const router = new Router();
 
 router.get("/whois/:domain", async (ctx) => {
   const { domain } = ctx.params;
-  console.log("Consultando WHOIS para: "+ " "+domain);
   
   if (!domain || !domain.includes(".cl")) {
     ctx.response.status = 400;
@@ -18,12 +17,10 @@ router.get("/whois/:domain", async (ctx) => {
     ctx.response.body = whoisData;
   } catch (error: unknown) {
     ctx.response.status = 500;
-    if (error instanceof Error) {
-      ctx.response.body = {
-        error: "Error al consultar WHOIS",
-        details: error.message,
-      };
-    }
+    ctx.response.body = {
+      error: "Error al consultar WHOIS",
+      details: error instanceof Error ? error.message : String(error),
+    };
   }
 });
 
@@ -48,9 +45,11 @@ async function fetchWhoisData(domain: string) {
       mensaje: "Este dominio no está registrado",
       disponible: true,
       fechaConsulta: new Date().toISOString(),
+      enlaceRegistro: `https://clientes.nic.cl/registrar/agregarDominio.do?d=${encodeURIComponent(domain)}`
     };
   }
 
+  // deno-lint-ignore no-explicit-any
   const domainData: any = {
     nombreDominio: domain,
     titular: "",
@@ -61,7 +60,6 @@ async function fetchWhoisData(domain: string) {
     nameServers: [],
     fechaConsulta: "",
     estado: "activo",
-    restauracion: null,
     disponible: false
   };
 
@@ -76,6 +74,7 @@ async function fetchWhoisData(domain: string) {
       domainData.restauracion = {
         fechaLimite: restorationMatch[0],
         mensaje: restorationText.replace(/\s+/g, ' ').trim(),
+        enlaceRestauracion: `https://clientes.nic.cl/registrar/renovar.do?d=${domain}`
       };
     }
   }
@@ -126,5 +125,5 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 const PORT = 8000;
-console.log(`Servidor en ejecución http://localhost:${PORT}`);
+console.log(`Server running on http://localhost:${PORT}`);
 await app.listen({ port: PORT });
