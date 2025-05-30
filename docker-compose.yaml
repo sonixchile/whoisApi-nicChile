@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  deno-app:
+    image: sjc.vultrcr.com/sonix/nic-chile-api:latest
+    container_name: NIC-CHILE-API
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
